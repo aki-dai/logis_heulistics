@@ -170,7 +170,7 @@ export const wholeStateSeries = derived(
         let currentWholeState = initWholeState
         let nextWholeState = tickWholeState(initWholeState)
 
-        while(Object.keys(nextWholeState).length > 0 && wholeStateSeries.length < 1000) {
+        while(nextWholeState.completedWorker < WORKER_NUM && wholeStateSeries.length < 1000) {
             wholeStateSeries.push(nextWholeState)
             currentWholeState = nextWholeState
             nextWholeState = tickWholeState(currentWholeState)
@@ -182,9 +182,6 @@ export const wholeStateSeries = derived(
 // wholeStateを渡して、次の時刻のwholeStateを求める
 export const tickWholeState = (wholeState) => {
     let completedWorker = wholeState.completedWorker
-    if (completedWorker >= WORKER_NUM) {
-        return {}
-    }
     const newWholeState = new WholeState(wholeState.layoutGrid, wholeState.workerGrid, wholeState.uncompletedOrders)
     const layoutGrid = newWholeState.layoutGrid
     const workerGrid = newWholeState.workerGrid
@@ -229,7 +226,6 @@ const moveWorker = (worker, layoutGrid, nextWorkerGridTable) => {
 
         if (!validPos(nextPos)) continue
         if (worker.destination[0] === nextPos[0] && worker.destination[1] === nextPos[1]) {
-            // 目的地に到着したとき
             const broughtProduct = worker.updateState()
             if (broughtProduct) layoutGrid[nextPos[0]][nextPos[1]].value = null
 
@@ -237,7 +233,6 @@ const moveWorker = (worker, layoutGrid, nextWorkerGridTable) => {
             break
         }
         if (layoutGrid[nextPos[0]][nextPos[1]].type === gridType['available'] && !nextWorkerGridTable[nextPos[0]][nextPos[1]]) {
-            // 移動可能で、他のworkerもいない時
             worker.x = nextPos[0]
             worker.y = nextPos[1]
             nextWorkerGridTable[nextPos[0]][nextPos[1]] = nextWorkerGridTable[currentPos[0]][currentPos[1]]
