@@ -1,4 +1,4 @@
-import { get, writable, derived } from 'svelte/store'
+import { get, writable } from 'svelte/store'
 import { Random } from '../util';
 
 const minCustomers = 10
@@ -28,9 +28,9 @@ export const Input = () => {
     const queryToString = (inputQueries) => {
         const rows = []
         rows.push(inputQueries.length.toString())
-        for(const query of inputQueries) {
+        for (const query of inputQueries) {
             rows.push(query.length.toString())
-            for(const detail of query) {
+            for (const detail of query) {
                 rows.push(detail.join(' '))
             }
         }
@@ -57,11 +57,11 @@ export const Input = () => {
         queryNum.set(newQueryNum)
         let curLine = 1
         const newInputQueries = []
-        for(let i = 1; i <= newQueryNum; i++) {
+        for (let i = 1; i <= newQueryNum; i++) {
             const customerNum = Number(rows[curLine])
             curLine++
             const detail = []
-            for(let j = curLine; j < curLine + customerNum; j++) {
+            for (let j = curLine; j < curLine + customerNum; j++) {
                 if (!rows[j]) {
                     curLine = j;
                     break;

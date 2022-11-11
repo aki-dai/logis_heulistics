@@ -4,7 +4,7 @@
   let options = []
   inputQueries.subscribe((queries) => {
     options = []
-    for(let i = 0; i < queries.length; i++) {
+    for (let i = 0; i < queries.length; i++) {
       options.push({
         id: i + 1,
         text: `クエリ${i + 1}, 顧客数: ${queries[i].length}`

@@ -73,7 +73,7 @@ export class Worker {
             const curState = queue.shift()
             const curPos = [curState[0], curState[1]]
             let initDirection = curState[2]
-            for(let i = 0; i < 4; i++) {
+            for (let i = 0; i < 4; i++) {
                 const direction = directions[i]
                 if (curState[2] < 0) initDirection = i
                 const nextState = [curPos[0] + direction[0], curPos[1] + direction[1], initDirection]

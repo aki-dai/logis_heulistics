@@ -44,9 +44,9 @@ const gridCell = (pos, type = 'available', value = null) => {
 
 const initLayoutGrid = () => {
     const layoutGrid = []
-    for(let i = 0; i < LENGTH; i++) {
+    for (let i = 0; i < LENGTH; i++) {
         const row = Array(WIDTH)
-        for(let j = 0; j < WIDTH; j++) {
+        for (let j = 0; j < WIDTH; j++) {
             let cell
             const pos = [i + 1, j + 1]
             if (i < CONTAINER_PLACE_LENGTH) {
@@ -69,7 +69,7 @@ const layoutGrid = derived(
     ([$tablePosition, $bareIcePosition, $baggedIcePosition, $customerOrders, $selectedQuery]) => {
         const layoutGrid = initLayoutGrid()
         const customerOrder = $customerOrders[0]
-        for(const table of $tablePosition) {
+        for (const table of $tablePosition) {
             let [x, y, direction, serialNum1, serialNum2] = table
             if (!validPos([x, y])) [x, y] = [0, 0]
             layoutGrid[x][y] = gridCell([x, y], 'table', customerOrder[serialNum1 - 1])
@@ -79,12 +79,12 @@ const layoutGrid = derived(
                 layoutGrid[x][y + 1] = gridCell([x, y + 1], 'table', customerOrder[serialNum2 - 1])
             }
         }
-        for(const bareIce of $bareIcePosition) {
+        for (const bareIce of $bareIcePosition) {
             let [x, y] = bareIce
             if (!validPos([x, y])) [x, y] = [0, 0]
             layoutGrid[x][y] = gridCell([x, y], 'bareIce')
         }
-        for(const baggedIce of $baggedIcePosition) {            
+        for (const baggedIce of $baggedIcePosition) {            
             let [x, y] = baggedIce
             if (!validPos([x, y])) [x, y] = [0, 0]
             layoutGrid[x][y] = gridCell([x, y], 'baggedIce')
@@ -115,11 +115,11 @@ class WorkerGrid {
         this.table = table
         const newWorkers = workers.map(worker => Worker.dupWorker(worker))
         this.workers = newWorkers
-        for(let i = 0; i < LENGTH; i++) {
+        for (let i = 0; i < LENGTH; i++) {
             const row = Array(WIDTH).fill(null)
             this.table.push(row)
         }
-        for(const worker of workers) {
+        for (const worker of workers) {
             this.table[worker.x][worker.y] = worker
         }
     }
@@ -127,7 +127,7 @@ class WorkerGrid {
 
 const initWorkers = () => {
     const workers = []
-    for(let i = 0; i < WORKER_NUM; i++) {
+    for (let i = 0; i < WORKER_NUM; i++) {
         const worker = new Worker([PACKING_PLACE_LENGTH - 1, i + 2])
         workers.push(worker)
     }
@@ -158,7 +158,7 @@ export const wholeStateSeries = derived(
         
         let restCustomerOrders = $customerOrders[0]
         const assignedWorkers = []
-        for(let worker of workers) {
+        for (let worker of workers) {
             let assignedWorker
             [assignedWorker, restCustomerOrders] = assignTargetCustomer(worker, restCustomerOrders)
             assignedWorkers.push(assignedWorker)
@@ -190,7 +190,7 @@ export const tickWholeState = (wholeState) => {
 
     let nextWorkerGridTable = workerGrid.table
     const nextWorkers = []
-    for(let worker of workers) {
+    for (let worker of workers) {
         if (nextWorkerGridTable[worker.x][worker.y] === null) continue
         if (worker.targetCustomer === 0) {
             // 未完了の注文があったらそれを割り当てて、なかったらその作業者は完了とする
@@ -220,7 +220,7 @@ export const tickWholeState = (wholeState) => {
 // 作業者を動かす。他の作業者などの影響で最短距離で移動できるとは限らないので、補正して動けた方向に動く。
 const moveWorker = (worker, layoutGrid, nextWorkerGridTable) => {
     const currentPos = [worker.x, worker.y]
-    for(let i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         const fixedDirection = fixDirection(worker.wishDirection, i)
         const nextPos = [currentPos[0] + fixedDirection[0], currentPos[1] + fixedDirection[1]]
 
